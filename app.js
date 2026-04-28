@@ -409,6 +409,14 @@ function renderAdmin() {
     .join("");
 }
 
+function isAdminView() {
+  return new URLSearchParams(window.location.search).get("admin") === "true";
+}
+
+function updateAdminVisibility() {
+  adminSection.hidden = !isAdminView();
+}
+
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -454,7 +462,7 @@ function handleWhatsApp() {
 }
 
 renderOptions();
-adminSection.hidden = new URLSearchParams(window.location.search).get("admin") !== "true";
+updateAdminVisibility();
 renderAdmin();
 year.textContent = new Date().getFullYear();
 
