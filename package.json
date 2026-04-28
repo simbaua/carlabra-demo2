@@ -1,0 +1,10 @@
+{
+  "name": "carlabra-estimate-tool",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node --check app.js && node --check calculator.js && node --check scripts/serve.mjs && node --check netlify/functions/send-estimate.js && node tests/app.test.mjs && node tests/telegram.test.mjs"
+  }
+}

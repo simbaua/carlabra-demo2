@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CarLabra professional car paint and body repair estimate tool in Espoo."
+    />
+    <title>CarLabra — Professional Car Paint & Body Repair</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#hero" aria-label="CarLabra home">
+          <span class="brand-copy">
+            <span class="brand-name">CarLabra</span>
+            <span class="brand-subtitle">Paint &amp; Body</span>
+          </span>
+        </a>
+        <nav class="header-nav" aria-label="Primary navigation">
+          <a href="#estimate">Estimate</a>
+          <a href="https://carlabra.fi/ru/gallery" target="_blank" rel="noopener noreferrer">Gallery</a>
+          <a href="https://carlabra.fi/ru/shop" target="_blank" rel="noopener noreferrer">Shop</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="hero section-dark">
+        <div class="section-inner hero-inner">
+          <div class="hero-content">
+            <p class="eyebrow">Espoo auto body workshop</p>
+            <h1>CarLabra — Professional Car Paint &amp; Body Repair</h1>
+            <p class="hero-copy">
+              Get an accurate repair estimate in under 60 seconds. Professional auto body repair,
+              paint restoration, and precision color matching in Espoo.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#estimate">Get your estimate</a>
+              <a
+                class="button button-secondary"
+                href="https://carlabra.fi/ru/gallery"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Gallery
+              </a>
+              <a
+                class="button button-secondary"
+                href="https://carlabra.fi/ru/shop"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Shop
+              </a>
+            </div>
+            <ul class="trust-list" aria-label="Trust points">
+              <li>Fast estimate</li>
+              <li>Premium finish</li>
+              <li>Precision color matching</li>
+            </ul>
+          </div>
+          <div class="hero-panel" aria-hidden="true">
+            <div class="hero-mark">CL</div>
+            <div class="panel-line"></div>
+            <div class="panel-meta">
+              <span>Paint</span>
+              <span>Body</span>
+              <span>Finish</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="estimate" class="estimate-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Photo-based estimate</p>
+            <h2>Upload photos and get a repair estimate range</h2>
+            <p>
+              Add up to three photos, select the affected areas, and receive a structured estimate
+              before continuing with the workshop team.
+            </p>
+          </div>
+
+          <div class="calculator-shell">
+            <form id="estimateForm" class="estimate-form">
+            <fieldset>
+              <legend>Upload photos for a more accurate estimate</legend>
+              <label class="photo-upload">
+                <input id="photoUpload" name="photos" type="file" accept="image/*" multiple />
+                <span>Choose up to 3 photos</span>
+              </label>
+              <div id="photoPreview" class="photo-preview" aria-live="polite"></div>
+              <p id="photoError" class="form-message" role="alert"></p>
+            </fieldset>
+
+            <fieldset>
+              <legend>Damaged parts</legend>
+              <div id="partsGrid" class="parts-grid">
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="bumper" />
+                  <span><span class="part-title">Bumper</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="front-fender" />
+                  <span><span class="part-title">Front fender</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="rear-quarter-panel" />
+                  <span><span class="part-title">Rear quarter panel</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="door" />
+                  <span><span class="part-title">Door</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="hood" />
+                  <span><span class="part-title">Hood</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="side-skirt-threshold" />
+                  <span><span class="part-title">Side skirt / threshold</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="small-parts" />
+                  <span><span class="part-title">Small parts</span></span>
+                </label>
+                <label class="part-card">
+                  <input type="checkbox" name="parts" value="roof" />
+                  <span><span class="part-title">Roof</span></span>
+                </label>
+              </div>
+              <p id="partsError" class="form-message" role="alert"></p>
+            </fieldset>
+
+            <fieldset>
+              <legend>Damage level</legend>
+              <div id="damageOptions" class="damage-options">
+                <label class="damage-card">
+                  <input type="radio" name="damage" value="light" checked />
+                  <span>
+                    <span class="damage-title">Light damage</span>
+                    <span class="damage-copy">Small scratches or minor paint defects</span>
+                  </span>
+                </label>
+                <label class="damage-card">
+                  <input type="radio" name="damage" value="medium" />
+                  <span>
+                    <span class="damage-title">Medium damage</span>
+                    <span class="damage-copy">Visible scratches, dents, or paint damage</span>
+                  </span>
+                </label>
+                <label class="damage-card">
+                  <input type="radio" name="damage" value="heavy" />
+                  <span>
+                    <span class="damage-title">Heavy damage</span>
+                    <span class="damage-copy">Large damage, deep dents, or complex repair</span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field-grid">
+              <label>
+                Name
+                <input id="customerName" name="name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                Phone
+                <input id="customerPhone" name="phone" type="tel" autocomplete="tel" required />
+              </label>
+              <label>
+                Email
+                <input id="customerEmail" name="email" type="email" autocomplete="email" placeholder="Optional" />
+              </label>
+              <label class="field-wide">
+                Car model
+                <input id="carModel" name="car" type="text" placeholder="Optional" />
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button class="button button-primary" type="button" id="calculateButton">
+                Calculate estimate
+              </button>
+            </div>
+            </form>
+
+            <aside class="estimate-result" aria-live="polite">
+            <p class="eyebrow">Estimate result</p>
+            <h3 id="priceOutput">Complete the form to calculate</h3>
+            <div id="summaryOutput" class="result-summary">
+              Upload photos, select damaged parts, and choose a damage level to see your estimate.
+            </div>
+            <p class="estimate-note">
+              This is an approximate estimate based on your selected details and uploaded photos.
+              Final price is confirmed after inspection.
+            </p>
+            <div id="resultActions" class="result-actions" hidden>
+              <button class="button button-dark" type="submit" form="estimateForm">Send request</button>
+              <button class="button button-whatsapp" type="button" id="whatsappButton">
+                Continue in WhatsApp
+              </button>
+            </div>
+            <div class="quick-links">
+              <a href="https://carlabra.fi/ru/gallery" target="_blank" rel="noopener noreferrer">View gallery</a>
+              <a href="https://carlabra.fi/ru/shop" target="_blank" rel="noopener noreferrer">Visit shop</a>
+            </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" class="services-section">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Services</p>
+            <h2>Complete body and paint care for drivers in Helsinki and Espoo</h2>
+            <p>
+              From the first estimate to the final handover, every stage follows a precise CarLabra
+              process. Clear pricing, disciplined timelines, and finish quality built for demanding
+              automotive standards.
+            </p>
+          </div>
+          <div class="services-grid">
+          <article>
+            <span>01</span>
+            <h3>Paint refinishing</h3>
+            <p>
+              Professional paintwork with high-grade materials and careful shade matching for a
+              smooth, consistent factory-level finish.
+            </p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Body repair</h3>
+            <p>
+              Collision repair, dent removal, and body restoration performed with measured precision
+              to preserve the vehicle's original geometry.
+            </p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Automotive paint supply</h3>
+            <p>
+              Accurate automotive paint matching and supply for repairs, refinishing, and specialist
+              color requirements.
+            </p>
+          </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="about-section section-dark">
+        <div class="section-inner about-inner">
+          <div>
+            <p class="eyebrow">About CarLabra</p>
+            <h2>Focused on quality and customer confidence since 2022</h2>
+          </div>
+          <div class="about-copy">
+          <p>
+            CarLabra Oy is an auto body and paint workshop in Espoo, operating since 2022. We
+            specialize in vehicle repair and refinishing, with close attention to detail at every
+            step of the process.
+          </p>
+          <p>
+            Our team and equipment allow us to work across a wide range of vehicles, from
+            motorcycles to commercial fleets. The goal is simple: restore a sharp, confident exterior
+            and deliver a result that feels right when the vehicle leaves the workshop.
+          </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="admin-section" hidden>
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">Request dashboard</p>
+            <h2>Saved estimate requests</h2>
+            <p>Requests are stored in this browser with localStorage.</p>
+          </div>
+          <div class="admin-toolbar">
+            <button class="button button-dark" type="button" id="refreshAdmin">Refresh requests</button>
+          </div>
+          <div class="admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Car</th>
+                <th>Parts</th>
+                <th>Damage</th>
+                <th>Price</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="adminRows"></tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+        <div>
+          <div class="footer-logo">CarLabra</div>
+          <p>
+            Professional auto body repair and paint workshop in Espoo. Quality repairs, accurate
+            estimates, and premium finish.
+          </p>
+        </div>
+        <div>
+          <h3>Services</h3>
+          <ul>
+            <li>Car painting</li>
+            <li>Body repair</li>
+            <li>Color matching</li>
+            <li>Paint sales</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Working hours</h3>
+          <p>Mon–Fri: 8:00–16:00</p>
+          <div class="footer-links">
+            <a href="https://carlabra.fi/ru/gallery" target="_blank" rel="noopener noreferrer">Gallery</a>
+            <a href="https://carlabra.fi/ru/shop" target="_blank" rel="noopener noreferrer">Shop</a>
+          </div>
+        </div>
+        <div>
+          <h3>Contacts</h3>
+          <ul>
+            <li><a href="tel:+358449019789">+358 44 901 9789</a></li>
+            <li><a href="mailto:info@carlabra.fi">info@carlabra.fi</a></li>
+            <li>Kylänportti 4B, 02940 Espoo</li>
+          </ul>
+          <div class="social-links">
+            <a href="https://wa.me/358449019789" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="https://carlabra.fi" target="_blank" rel="noopener noreferrer">Website</a>
+          </div>
+        </div>
+        </div>
+        <div class="footer-bottom">© <span id="year"></span> CarLabra Oy. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
