@@ -1,34 +1,374 @@
 const STORAGE_KEY = "carlabra_estimate_requests";
 const TELEGRAM_ENDPOINT = "/.netlify/functions/send-estimate";
-const REQUIRED_FIELDS_MESSAGE =
-  "Please upload photos, select damaged parts, choose damage level, and enter your name and phone.";
+const LANGUAGE_KEY = "carlabra_language";
+const DEFAULT_LANGUAGE = "fi";
+const SUPPORTED_LANGUAGES = ["en", "fi"];
+const TRANSLATIONS = {
+  en: {
+    meta: {
+      title: "CarLabra — Professional Car Paint & Body Repair",
+      description: "CarLabra professional car paint and body repair estimate tool in Espoo.",
+    },
+    language: { aria: "Language" },
+    brand: { subtitle: "Paint & Body" },
+    nav: {
+      aria: "Primary navigation",
+      estimate: "Estimate",
+      gallery: "Gallery",
+      shop: "Shop",
+      contact: "Contact",
+    },
+    hero: {
+      eyebrow: "Espoo auto body workshop",
+      title: "CarLabra — Professional Car Paint & Body Repair",
+      copy:
+        "Get an accurate repair estimate in under 60 seconds. Professional auto body repair, paint restoration, and precision color matching in Espoo.",
+      cta: "Get your estimate",
+      trust: {
+        fast: "Fast estimate",
+        finish: "Premium finish",
+        color: "Precision color matching",
+      },
+      panel: { paint: "Paint", body: "Body", finish: "Finish" },
+    },
+    estimate: {
+      eyebrow: "Photo-based estimate",
+      title: "Upload photos and get a repair estimate range",
+      copy:
+        "Add up to three photos, select the affected areas, and receive a structured estimate before continuing with the workshop team.",
+    },
+    form: {
+      photos: {
+        legend: "Upload photos for a more accurate estimate",
+        choose: "Choose up to 3 photos",
+      },
+      parts: { legend: "Damaged parts" },
+      damage: { legend: "Damage level" },
+      name: "Name",
+      phone: "Phone",
+      email: "Email",
+      car: "Car model",
+      optional: "Optional",
+      calculate: "Calculate estimate",
+    },
+    parts: {
+      bumper: "Bumper",
+      frontFender: "Front fender",
+      rearQuarterPanel: "Rear quarter panel",
+      door: "Door",
+      hood: "Hood",
+      sideSkirtThreshold: "Side skirt / threshold",
+      smallParts: "Small parts",
+      roof: "Roof",
+    },
+    damage: {
+      light: {
+        label: "Light damage",
+        description: "Small scratches or minor paint defects",
+      },
+      medium: {
+        label: "Medium damage",
+        description: "Visible scratches, dents, or paint damage",
+      },
+      heavy: {
+        label: "Heavy damage",
+        description: "Large damage, deep dents, or complex repair",
+      },
+    },
+    result: {
+      eyebrow: "Estimate result",
+      emptyTitle: "Complete the form to calculate",
+      defaultSummary:
+        "Upload photos, select damaged parts, and choose a damage level to see your estimate.",
+      note:
+        "This is an approximate estimate based on your selected details and uploaded photos. Final price is confirmed after inspection.",
+      send: "Send request",
+      whatsapp: "Continue in WhatsApp",
+      gallery: "View gallery",
+      shop: "Visit shop",
+      selectedParts: "Selected parts",
+      damageLevel: "Damage level",
+      estimatedRange: "Estimated price range",
+      pricePrefix: "Estimated price",
+      selectParts: "Select damaged parts",
+    },
+    messages: {
+      required:
+        "Please upload photos, select damaged parts, choose damage level, and enter your name and phone.",
+      photoLimit: "Please upload no more than 3 photos.",
+      noSaved: "No saved requests yet.",
+      notProvided: "Not provided",
+      savedLocal: "Request saved locally. Telegram delivery is available on the deployed site.",
+      savedTelegram: "Request saved locally and sent to Telegram. You can also continue in WhatsApp.",
+      telegramFailedPrefix: "Request saved locally, but Telegram notification was not sent: ",
+    },
+    whatsapp: {
+      title: "New CarLabra estimate request",
+      estimate: "Estimate",
+      parts: "Parts",
+      damage: "Damage level",
+      price: "Estimated price",
+      customer: "Customer",
+      name: "Name",
+      phone: "Phone",
+      car: "Car",
+      source: "Sent from website.",
+    },
+    services: {
+      eyebrow: "Services",
+      title: "Complete body and paint care for drivers in Helsinki and Espoo",
+      copy:
+        "From the first estimate to the final handover, every stage follows a precise CarLabra process. Clear pricing, disciplined timelines, and finish quality built for demanding automotive standards.",
+      paint: {
+        title: "Paint refinishing",
+        copy:
+          "Professional paintwork with high-grade materials and careful shade matching for a smooth, consistent factory-level finish.",
+      },
+      body: {
+        title: "Body repair",
+        copy:
+          "Collision repair, dent removal, and body restoration performed with measured precision to preserve the vehicle's original geometry.",
+      },
+      supply: {
+        title: "Automotive paint supply",
+        copy:
+          "Accurate automotive paint matching and supply for repairs, refinishing, and specialist color requirements.",
+      },
+    },
+    about: {
+      eyebrow: "About CarLabra",
+      title: "Focused on quality and customer confidence since 2022",
+      copy1:
+        "CarLabra Oy is an auto body and paint workshop in Espoo, operating since 2022. We specialize in vehicle repair and refinishing, with close attention to detail at every step of the process.",
+      copy2:
+        "Our team and equipment allow us to work across a wide range of vehicles, from motorcycles to commercial fleets. The goal is simple: restore a sharp, confident exterior and deliver a result that feels right when the vehicle leaves the workshop.",
+    },
+    admin: {
+      eyebrow: "Request dashboard",
+      title: "Saved estimate requests",
+      copy: "Requests are stored in this browser with localStorage.",
+      refresh: "Refresh requests",
+      headers: {
+        name: "Name",
+        phone: "Phone",
+        car: "Car",
+        parts: "Parts",
+        damage: "Damage",
+        price: "Price",
+        date: "Date",
+      },
+    },
+    footer: {
+      copy:
+        "Professional auto body repair and paint workshop in Espoo. Quality repairs, accurate estimates, and premium finish.",
+      services: {
+        title: "Services",
+        painting: "Car painting",
+        body: "Body repair",
+        color: "Color matching",
+        sales: "Paint sales",
+      },
+      hours: { title: "Working hours", copy: "Mon-Fri: 8:00-16:00" },
+      contacts: { title: "Contacts", website: "Website" },
+      bottom: "All rights reserved.",
+    },
+  },
+  fi: {
+    meta: {
+      title: "CarLabra — automaalaus ja korikorjaus",
+      description: "CarLabran automaalauksen ja korikorjauksen arviotyökalu Espoossa.",
+    },
+    language: { aria: "Kieli" },
+    brand: { subtitle: "Maalaus & kori" },
+    nav: {
+      aria: "Päänavigaatio",
+      estimate: "Arvio",
+      gallery: "Galleria",
+      shop: "Kauppa",
+      contact: "Yhteys",
+    },
+    hero: {
+      eyebrow: "Automaalaamo ja korikorjaamo Espoossa",
+      title: "CarLabra — automaalaus ja korikorjaus",
+      copy:
+        "Pyydä korjausarvio alle minuutissa. Teemme korikorjaukset, maalipinnan korjaukset ja tarkan värinsävytyksen Espoossa.",
+      cta: "Pyydä arvio",
+      trust: {
+        fast: "Nopea arvio",
+        finish: "Laadukas viimeistely",
+        color: "Tarkka värinsävytys",
+      },
+      panel: { paint: "Maalaus", body: "Kori", finish: "Viimeistely" },
+    },
+    estimate: {
+      eyebrow: "Kuvapohjainen arvio",
+      title: "Lataa kuvat ja saat hinta-arvion",
+      copy:
+        "Lisää enintään kolme kuvaa, valitse vaurioituneet kohdat ja saat selkeän arvion ennen yhteydenottoa korjaamolle.",
+    },
+    form: {
+      photos: {
+        legend: "Lataa kuvat tarkempaa arviota varten",
+        choose: "Valitse enintään 3 kuvaa",
+      },
+      parts: { legend: "Vaurioituneet osat" },
+      damage: { legend: "Vaurion aste" },
+      name: "Nimi",
+      phone: "Puhelin",
+      email: "Sähköposti",
+      car: "Automalli",
+      optional: "Valinnainen",
+      calculate: "Laske arvio",
+    },
+    parts: {
+      bumper: "Puskuri",
+      frontFender: "Etulokasuoja",
+      rearQuarterPanel: "Takakylki",
+      door: "Ovi",
+      hood: "Konepelti",
+      sideSkirtThreshold: "Helma / kynnys",
+      smallParts: "Pienosat",
+      roof: "Katto",
+    },
+    damage: {
+      light: {
+        label: "Kevyt vaurio",
+        description: "Pieniä naarmuja tai lieviä maalipinnan virheitä",
+      },
+      medium: {
+        label: "Keskitasoinen vaurio",
+        description: "Selviä naarmuja, lommoja tai maalivaurioita",
+      },
+      heavy: {
+        label: "Laaja vaurio",
+        description: "Suuria vaurioita, syviä lommoja tai vaativa korjaus",
+      },
+    },
+    result: {
+      eyebrow: "Arvion tulos",
+      emptyTitle: "Täytä tiedot arvion laskemiseksi",
+      defaultSummary: "Lataa kuvat, valitse vaurioituneet osat ja vaurion aste nähdäksesi arvion.",
+      note:
+        "Tämä on suuntaa-antava arvio valittujen tietojen ja ladattujen kuvien perusteella. Lopullinen hinta vahvistetaan tarkastuksen jälkeen.",
+      send: "Lähetä pyyntö",
+      whatsapp: "Jatka WhatsAppissa",
+      gallery: "Katso galleria",
+      shop: "Siirry kauppaan",
+      selectedParts: "Valitut osat",
+      damageLevel: "Vaurion aste",
+      estimatedRange: "Arvioitu hintahaarukka",
+      pricePrefix: "Arvioitu hinta",
+      selectParts: "Valitse vaurioituneet osat",
+    },
+    messages: {
+      required:
+        "Lataa kuvat, valitse vaurioituneet osat ja vaurion aste sekä täytä nimi ja puhelinnumero.",
+      photoLimit: "Lataa enintään 3 kuvaa.",
+      noSaved: "Tallennettuja pyyntöjä ei vielä ole.",
+      notProvided: "Ei annettu",
+      savedLocal: "Pyyntö tallennettu tähän selaimeen. Telegram-lähetys toimii julkaistulla sivustolla.",
+      savedTelegram: "Pyyntö tallennettu ja lähetetty Telegramiin. Voit jatkaa myös WhatsAppissa.",
+      telegramFailedPrefix: "Pyyntö tallennettu tähän selaimeen, mutta Telegram-ilmoitusta ei lähetetty: ",
+    },
+    whatsapp: {
+      title: "Uusi CarLabra-arviopyyntö",
+      estimate: "Arvio",
+      parts: "Osat",
+      damage: "Vaurion aste",
+      price: "Arvioitu hinta",
+      customer: "Asiakas",
+      name: "Nimi",
+      phone: "Puhelin",
+      car: "Auto",
+      source: "Lähetetty verkkosivulta.",
+    },
+    services: {
+      eyebrow: "Palvelut",
+      title: "Korikorjaukset ja automaalaukset Helsingin ja Espoon alueella",
+      copy:
+        "Ensimmäisestä arviosta luovutukseen asti työ etenee selkeän CarLabra-prosessin mukaan. Saat läpinäkyvän hinnoittelun, sovitut aikataulut ja viimeistelyn, joka kestää tarkastelun.",
+      paint: {
+        title: "Automaalaus",
+        copy:
+          "Laadukas maalaustyö, huolellinen sävyn sovitus ja tasainen, tehdastasoinen viimeistely.",
+      },
+      body: {
+        title: "Korikorjaus",
+        copy:
+          "Kolarikorjaukset, lommojen korjaukset ja korin oikaisut tehdään mitatusti auton alkuperäistä muotoa kunnioittaen.",
+      },
+      supply: {
+        title: "Automalien myynti",
+        copy:
+          "Tarkka automaalien sävytys ja toimitus korjauksiin, maalauksiin ja erikoisväreihin.",
+      },
+    },
+    about: {
+      eyebrow: "Tietoa CarLabrasta",
+      title: "Laatua ja luottamusta vuodesta 2022",
+      copy1:
+        "CarLabra Oy on Espoossa toimiva automaalaamo ja korikorjaamo, joka on palvellut asiakkaita vuodesta 2022. Erikoisalaamme ovat ajoneuvojen korjaukset ja viimeistely tarkalla työotteella.",
+      copy2:
+        "Osaamisemme ja laitteistomme sopivat monenlaisiin ajoneuvoihin moottoripyöristä hyötyajoneuvoihin. Tavoitteena on palauttaa siisti ja varma ulkonäkö sekä lopputulos, johon asiakas voi luottaa.",
+    },
+    admin: {
+      eyebrow: "Pyyntöjen hallinta",
+      title: "Tallennetut arviopyynnöt",
+      copy: "Pyynnöt tallennetaan tämän selaimen localStorage-muistiin.",
+      refresh: "Päivitä pyynnöt",
+      headers: {
+        name: "Nimi",
+        phone: "Puhelin",
+        car: "Auto",
+        parts: "Osat",
+        damage: "Vaurio",
+        price: "Hinta",
+        date: "Päivä",
+      },
+    },
+    footer: {
+      copy:
+        "Espoossa toimiva automaalaamo ja korikorjaamo. Laadukkaat korjaukset, selkeät arviot ja viimeistelty lopputulos.",
+      services: {
+        title: "Palvelut",
+        painting: "Automaalaus",
+        body: "Korikorjaus",
+        color: "Värinsävytys",
+        sales: "Maalien myynti",
+      },
+      hours: { title: "Aukioloajat", copy: "Ma-pe: 8:00-16:00" },
+      contacts: { title: "Yhteystiedot", website: "Verkkosivusto" },
+      bottom: "Kaikki oikeudet pidätetään.",
+    },
+  },
+};
 const PARTS = [
-  { id: "bumper", label: "Bumper", min: 490, max: 570 },
-  { id: "front-fender", label: "Front fender", min: 260, max: 350 },
-  { id: "rear-quarter-panel", label: "Rear quarter panel", min: 350, max: 440 },
-  { id: "door", label: "Door", min: 390, max: 490 },
-  { id: "hood", label: "Hood", min: 580, max: 700 },
-  { id: "side-skirt-threshold", label: "Side skirt / threshold", min: 310, max: 400 },
-  { id: "small-parts", label: "Small parts", min: 150, max: 200 },
-  { id: "roof", label: "Roof", min: 700, max: 900 },
+  { id: "bumper", labelKey: "parts.bumper", min: 490, max: 570 },
+  { id: "front-fender", labelKey: "parts.frontFender", min: 260, max: 350 },
+  { id: "rear-quarter-panel", labelKey: "parts.rearQuarterPanel", min: 350, max: 440 },
+  { id: "door", labelKey: "parts.door", min: 390, max: 490 },
+  { id: "hood", labelKey: "parts.hood", min: 580, max: 700 },
+  { id: "side-skirt-threshold", labelKey: "parts.sideSkirtThreshold", min: 310, max: 400 },
+  { id: "small-parts", labelKey: "parts.smallParts", min: 150, max: 200 },
+  { id: "roof", labelKey: "parts.roof", min: 700, max: 900 },
 ];
 const DAMAGE_LEVELS = [
   {
     id: "light",
-    label: "Light damage",
-    description: "Small scratches or minor paint defects",
+    labelKey: "damage.light.label",
+    descriptionKey: "damage.light.description",
     coefficient: 1,
   },
   {
     id: "medium",
-    label: "Medium damage",
-    description: "Visible scratches, dents, or paint damage",
+    labelKey: "damage.medium.label",
+    descriptionKey: "damage.medium.description",
     coefficient: 1.25,
   },
   {
     id: "heavy",
-    label: "Heavy damage",
-    description: "Large damage, deep dents, or complex repair",
+    labelKey: "damage.heavy.label",
+    descriptionKey: "damage.heavy.description",
     coefficient: 1.5,
   },
 ];
@@ -49,8 +389,83 @@ const adminRows = document.querySelector("#adminRows");
 const refreshAdmin = document.querySelector("#refreshAdmin");
 const adminSection = document.querySelector("#admin");
 const year = document.querySelector("#year");
+const languageButtons = document.querySelectorAll("[data-lang-option]");
 
 let currentEstimate = null;
+let currentLanguage = getInitialLanguage();
+
+function getInitialLanguage() {
+  const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
+  return SUPPORTED_LANGUAGES.includes(savedLanguage) ? savedLanguage : DEFAULT_LANGUAGE;
+}
+
+function t(key, language = currentLanguage) {
+  return key.split(".").reduce((value, part) => value?.[part], TRANSLATIONS[language]) || key;
+}
+
+function getPartLabel(part, language = currentLanguage) {
+  return t(part.labelKey, language);
+}
+
+function getDamageLabel(damage, language = currentLanguage) {
+  return t(damage.labelKey, language);
+}
+
+function getDamageDescription(damage, language = currentLanguage) {
+  return t(damage.descriptionKey, language);
+}
+
+function applyStaticTranslations() {
+  document.documentElement.lang = currentLanguage;
+  document.title = t("meta.title");
+  document
+    .querySelector('meta[name="description"]')
+    ?.setAttribute("content", t("meta.description"));
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+  });
+
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+  });
+}
+
+function updateLanguageButtons() {
+  languageButtons.forEach((button) => {
+    const isSelected = button.dataset.langOption === currentLanguage;
+    button.classList.toggle("is-active", isSelected);
+    button.setAttribute("aria-pressed", String(isSelected));
+  });
+}
+
+function renderDefaultEstimateState() {
+  priceOutput.textContent = t("result.emptyTitle");
+  summaryOutput.textContent = t("result.defaultSummary");
+}
+
+function setLanguage(language) {
+  if (!SUPPORTED_LANGUAGES.includes(language)) {
+    return;
+  }
+
+  currentLanguage = language;
+  localStorage.setItem(LANGUAGE_KEY, language);
+  applyStaticTranslations();
+  updateLanguageButtons();
+
+  if (currentEstimate) {
+    renderEstimateResult(currentEstimate);
+  } else {
+    renderDefaultEstimateState();
+  }
+
+  renderAdmin();
+}
 
 function formatPrice(min, max) {
   return `${Math.round(min)}€ – ${Math.round(max)}€`;
@@ -74,27 +489,27 @@ function calculatePriceRange(parts, damage) {
 }
 
 function createWhatsAppLink(request) {
-  const message = `New CarLabra estimate request:
+  const message = `${t("whatsapp.title")}
 
-Parts: ${request.parts.join(", ")}
-Damage level: ${request.damage}
-Estimated price: ${request.price}
+${t("whatsapp.estimate")}:
+${t("whatsapp.parts")}: ${request.parts.join(", ")}
+${t("whatsapp.damage")}: ${request.damage}
+${t("whatsapp.price")}: ${request.price}
 
-Customer:
-Name: ${request.name}
-Phone: ${request.phone}
-Car: ${request.car}
+${t("whatsapp.customer")}:
+${t("whatsapp.name")}: ${request.name}
+${t("whatsapp.phone")}: ${request.phone}
+${t("whatsapp.car")}: ${request.car}
 
-Sent from website.`;
+${t("whatsapp.source")}`;
 
   return `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
 }
 
 function resetEstimateResult() {
   currentEstimate = null;
-  priceOutput.textContent = "Complete the form to calculate";
-  summaryOutput.textContent =
-    "Upload photos, select damaged parts, and choose a damage level to see your estimate.";
+  renderDefaultEstimateState();
+  whatsappButton.setAttribute("href", "#");
   resultActions.hidden = true;
 }
 
@@ -153,7 +568,7 @@ function renderOptions() {
       <label class="part-card">
         <input type="checkbox" name="parts" value="${part.id}" />
         <span>
-          <span class="part-title">${part.label}</span>
+          <span class="part-title" data-i18n="${part.labelKey}">${getPartLabel(part)}</span>
         </span>
       </label>
     `
@@ -164,8 +579,8 @@ function renderOptions() {
       <label class="damage-card">
         <input type="radio" name="damage" value="${damage.id}" ${index === 0 ? "checked" : ""} />
         <span>
-          <span class="damage-title">${damage.label}</span>
-          <span class="damage-copy">${damage.description}</span>
+          <span class="damage-title" data-i18n="${damage.labelKey}">${getDamageLabel(damage)}</span>
+          <span class="damage-copy" data-i18n="${damage.descriptionKey}">${getDamageDescription(damage)}</span>
         </span>
       </label>
     `
@@ -186,7 +601,7 @@ function validatePhotos() {
   if (files.length > 3) {
     photoUpload.value = "";
     photoPreview.innerHTML = "";
-    photoError.textContent = "Please upload no more than 3 photos.";
+    photoError.textContent = t("messages.photoLimit");
     resetEstimateResult();
     return false;
   }
@@ -197,9 +612,9 @@ function validatePhotos() {
 
 function showRequiredFieldsError() {
   currentEstimate = null;
-  priceOutput.textContent = "Complete the form to calculate";
-  summaryOutput.textContent = REQUIRED_FIELDS_MESSAGE;
-  photoError.textContent = REQUIRED_FIELDS_MESSAGE;
+  priceOutput.textContent = t("result.emptyTitle");
+  summaryOutput.textContent = t("messages.required");
+  photoError.textContent = t("messages.required");
   resultActions.hidden = true;
 }
 
@@ -210,7 +625,7 @@ function validateRequiredEstimateFields() {
 
   if (!parts.length || !damage || !customer.name || !customer.phone) {
     showRequiredFieldsError();
-    partsError.textContent = parts.length ? "" : REQUIRED_FIELDS_MESSAGE;
+    partsError.textContent = parts.length ? "" : t("messages.required");
     return null;
   }
 
@@ -237,23 +652,27 @@ function renderPhotoPreview() {
 }
 
 function renderEstimateResult(estimate) {
-  priceOutput.textContent = `Estimated price: ${estimate.price}`;
+  priceOutput.textContent = `${t("result.pricePrefix")}: ${estimate.price}`;
   summaryOutput.innerHTML = `
     <dl>
       <div>
-        <dt>Selected parts</dt>
-        <dd>${escapeHtml(estimate.parts.map((part) => part.label).join(", "))}</dd>
+        <dt>${escapeHtml(t("result.selectedParts"))}</dt>
+        <dd>${escapeHtml(estimate.parts.map((part) => getPartLabel(part)).join(", "))}</dd>
       </div>
       <div>
-        <dt>Damage level</dt>
-        <dd>${escapeHtml(estimate.damage.label)}</dd>
+        <dt>${escapeHtml(t("result.damageLevel"))}</dt>
+        <dd>${escapeHtml(getDamageLabel(estimate.damage))}</dd>
       </div>
       <div>
-        <dt>Estimated price range</dt>
+        <dt>${escapeHtml(t("result.estimatedRange"))}</dt>
         <dd>${escapeHtml(estimate.price)}</dd>
       </div>
     </dl>
   `;
+  const request = createRequest();
+  if (request) {
+    whatsappButton.setAttribute("href", createWhatsAppLink(request));
+  }
   resultActions.hidden = false;
 }
 
@@ -277,11 +696,11 @@ function calculateEstimate({ showError = true, requireForm = false } = {}) {
 
   if (!parts.length) {
     currentEstimate = null;
-    priceOutput.textContent = "Select damaged parts";
-    summaryOutput.textContent = REQUIRED_FIELDS_MESSAGE;
+    priceOutput.textContent = t("result.selectParts");
+    summaryOutput.textContent = t("messages.required");
     resultActions.hidden = true;
     if (showError) {
-      partsError.textContent = REQUIRED_FIELDS_MESSAGE;
+      partsError.textContent = t("messages.required");
     }
     return null;
   }
@@ -316,13 +735,13 @@ function createRequest() {
 
   return {
     id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now()),
-    name: customer.name || "Not provided",
-    phone: customer.phone || "Not provided",
-    email: customer.email || "Not provided",
-    car: customer.car || "Not provided",
+    name: customer.name || t("messages.notProvided"),
+    phone: customer.phone || t("messages.notProvided"),
+    email: customer.email || t("messages.notProvided"),
+    car: customer.car || t("messages.notProvided"),
     photos: selectedPhotoNames(),
-    parts: estimate.parts.map((part) => part.label),
-    damage: estimate.damage.label,
+    parts: estimate.parts.map((part) => getPartLabel(part)),
+    damage: getDamageLabel(estimate.damage),
     price: estimate.price,
     date: new Date().toISOString(),
   };
@@ -385,7 +804,7 @@ function renderAdmin() {
   if (!requests.length) {
     adminRows.innerHTML = `
       <tr>
-        <td class="empty-row" colspan="7">No saved requests yet.</td>
+        <td class="empty-row" colspan="7">${escapeHtml(t("messages.noSaved"))}</td>
       </tr>
     `;
     return;
@@ -436,34 +855,34 @@ async function handleSubmit(event) {
     const result = await sendRequestToTelegram(request);
     appendSaveMessage(
       result.skipped
-        ? "Request saved locally. Telegram delivery is available on the deployed site."
-        : "Request saved locally and sent to Telegram. You can also continue in WhatsApp."
+        ? t("messages.savedLocal")
+        : t("messages.savedTelegram")
     );
   } catch (error) {
-    appendSaveMessage(
-      `Request saved locally, but Telegram notification was not sent: ${error.message}`
-    );
+    appendSaveMessage(`${t("messages.telegramFailedPrefix")}${error.message}`);
   }
 }
 
-function handleWhatsApp() {
+function handleWhatsApp(event) {
   if (!estimateForm.reportValidity()) {
+    event.preventDefault();
     return;
   }
 
   const request = createRequest();
   if (!request) {
+    event.preventDefault();
     return;
   }
 
   saveRequest(request);
   renderAdmin();
-  window.open(createWhatsAppLink(request), "_blank", "noopener,noreferrer");
+  whatsappButton.setAttribute("href", createWhatsAppLink(request));
 }
 
 renderOptions();
 updateAdminVisibility();
-renderAdmin();
+setLanguage(currentLanguage);
 year.textContent = new Date().getFullYear();
 
 calculateButton.addEventListener("click", () => calculateEstimate({ requireForm: true }));
@@ -471,6 +890,9 @@ estimateForm.addEventListener("submit", handleSubmit);
 whatsappButton.addEventListener("click", handleWhatsApp);
 refreshAdmin.addEventListener("click", renderAdmin);
 photoUpload.addEventListener("change", renderPhotoPreview);
+languageButtons.forEach((button) => {
+  button.addEventListener("click", () => setLanguage(button.dataset.langOption));
+});
 
 document.addEventListener("change", (event) => {
   if (event.target.matches('input[name="parts"], input[name="damage"]')) {
