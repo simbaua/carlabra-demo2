@@ -1,6 +1,9 @@
 const STORAGE_KEY = "carlabra_estimate_requests";
 const TELEGRAM_ENDPOINT = "/.netlify/functions/send-estimate";
 const LANGUAGE_KEY = "carlabra_language";
+const COOKIE_CONSENT_KEY = "carlabra_cookie_consent";
+const GA_MEASUREMENT_ID = "G-DMH9P98ZTZ";
+const GA_SCRIPT_ID = "carlabra-ga4-script";
 const DEFAULT_LANGUAGE = "fi";
 const SUPPORTED_LANGUAGES = ["en", "fi"];
 const TRANSLATIONS = {
@@ -51,6 +54,7 @@ const TRANSLATIONS = {
       car: "Car model",
       optional: "Optional",
       calculate: "Calculate estimate",
+      helper: "We will send the estimate as soon as possible via WhatsApp or email.",
     },
     parts: {
       bumper: "Bumper",
@@ -102,6 +106,13 @@ const TRANSLATIONS = {
       savedLocal: "Request saved locally. Telegram delivery is available on the deployed site.",
       savedTelegram: "Request saved locally and sent to Telegram. You can also continue in WhatsApp.",
       telegramFailedPrefix: "Request saved locally, but Telegram notification was not sent: ",
+      submitSuccess: "Thank you! We have received your request and will contact you soon.",
+    },
+    cookies: {
+      aria: "Cookie consent",
+      text: "We use cookies to improve user experience and analyze traffic.",
+      accept: "Accept",
+      decline: "Decline",
     },
     whatsapp: {
       title: "New CarLabra estimate request",
@@ -223,6 +234,7 @@ const TRANSLATIONS = {
       car: "Automalli",
       optional: "Valinnainen",
       calculate: "Laske arvio",
+      helper: "Lähetämme arvion mahdollisimman pian WhatsAppissa tai sähköpostitse.",
     },
     parts: {
       bumper: "Puskuri",
@@ -273,6 +285,13 @@ const TRANSLATIONS = {
       savedLocal: "Pyyntö tallennettu tähän selaimeen. Telegram-lähetys toimii julkaistulla sivustolla.",
       savedTelegram: "Pyyntö tallennettu ja lähetetty Telegramiin. Voit jatkaa myös WhatsAppissa.",
       telegramFailedPrefix: "Pyyntö tallennettu tähän selaimeen, mutta Telegram-ilmoitusta ei lähetetty: ",
+      submitSuccess: "Kiitos! Olemme vastaanottaneet pyyntösi ja otamme yhteyttä pian.",
+    },
+    cookies: {
+      aria: "Evästevalinta",
+      text: "Käytämme evästeitä parantaaksemme käyttökokemusta ja analysoidaksemme liikennettä.",
+      accept: "Hyväksy",
+      decline: "Hylkää",
     },
     whatsapp: {
       title: "Uusi CarLabra-arviopyyntö",
@@ -396,6 +415,10 @@ const refreshAdmin = document.querySelector("#refreshAdmin");
 const adminSection = document.querySelector("#admin");
 const year = document.querySelector("#year");
 const languageButtons = document.querySelectorAll("[data-lang-option]");
+const cookieConsent = document.querySelector("#cookieConsent");
+const cookieAccept = document.querySelector("#cookieAccept");
+const cookieDecline = document.querySelector("#cookieDecline");
+const successMessage = document.querySelector("#successMessage");
 
 let currentEstimate = null;
 let currentLanguage = getInitialLanguage();
@@ -512,11 +535,173 @@ ${t("whatsapp.source")}`;
   return `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
 }
 
+function analyticsConsentAccepted() {
+  return localStorage.getItem(COOKIE_CONSENT_KEY) === "accepted";
+}
+
+function analyticsReady() {
+  return analyticsConsentAccepted() && typeof gtag === "function";
+}
+
+function loadGoogleAnalytics() {
+  if (!analyticsConsentAccepted()) {
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+
+  if (typeof window.gtag !== "function") {
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag("js", new Date());
+    window.gtag("config", GA_MEASUREMENT_ID);
+  }
+
+  if (!document.querySelector(`#${GA_SCRIPT_ID}`)) {
+    const script = document.createElement("script");
+    script.id = GA_SCRIPT_ID;
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.append(script);
+  }
+}
+
+function blockGoogleAnalytics() {
+  document.querySelector(`#${GA_SCRIPT_ID}`)?.remove();
+  window.dataLayer = [];
+
+  try {
+    delete window.gtag;
+  } catch {
+    window.gtag = undefined;
+  }
+}
+
+function hideCookieConsent() {
+  cookieConsent.classList.remove("is-visible");
+  cookieConsent.hidden = true;
+}
+
+function showCookieConsent() {
+  if (localStorage.getItem(COOKIE_CONSENT_KEY)) {
+    return;
+  }
+
+  cookieConsent.hidden = false;
+  requestAnimationFrame(() => cookieConsent.classList.add("is-visible"));
+}
+
+function setCookieConsent(choice) {
+  localStorage.setItem(COOKIE_CONSENT_KEY, choice);
+  hideCookieConsent();
+
+  if (choice === "accepted") {
+    loadGoogleAnalytics();
+    return;
+  }
+
+  blockGoogleAnalytics();
+}
+
+function initCookieConsent() {
+  const choice = localStorage.getItem(COOKIE_CONSENT_KEY);
+
+  if (choice === "accepted") {
+    loadGoogleAnalytics();
+    return;
+  }
+
+  if (choice === "declined") {
+    blockGoogleAnalytics();
+    return;
+  }
+
+  showCookieConsent();
+}
+
+function trackButtonClick(buttonText, buttonLocation, buttonUrl = "") {
+  if (analyticsReady()) {
+    gtag("event", "button_click", {
+      button_text: buttonText,
+      button_location: buttonLocation,
+      button_url: buttonUrl,
+      language: currentLanguage,
+    });
+  }
+}
+
+function trackGenerateLead() {
+  if (analyticsReady()) {
+    gtag("event", "generate_lead", {
+      lead_type: "estimate_form",
+      language: currentLanguage,
+    });
+  }
+}
+
+function getClickTarget(event) {
+  return event.target instanceof Element ? event.target.closest("a, button") : null;
+}
+
+function getButtonText(element) {
+  return element.textContent.trim().replace(/\s+/g, " ");
+}
+
+function getButtonUrl(element) {
+  if (element instanceof HTMLAnchorElement) {
+    return element.href || element.getAttribute("href") || "";
+  }
+
+  return element.getAttribute("form") || element.id || "";
+}
+
+function getButtonLocation(element) {
+  const locationMap = [
+    [".header-nav", "header_navigation"],
+    [".language-switcher", "header_language_switcher"],
+    [".hero-actions", "hero"],
+    [".form-actions", "estimate_form"],
+    [".result-actions", "estimate_result"],
+    [".quick-links", "estimate_result_links"],
+    [".footer-links", "footer_links"],
+    [".social-links", "footer_social_links"],
+    [".site-footer", "footer"],
+    [".admin-toolbar", "admin"],
+  ];
+
+  const match = locationMap.find(([selector]) => element.closest(selector));
+  return match ? match[1] : "website";
+}
+
+function isTrackableClickTarget(element) {
+  if (!element || element.closest(".brand")) {
+    return false;
+  }
+
+  return Boolean(
+    element.closest(
+      ".header-nav, .language-switcher, .hero-actions, .form-actions, .result-actions, .quick-links, .site-footer, .admin-toolbar"
+    )
+  );
+}
+
+function handleTrackedClick(event) {
+  const target = getClickTarget(event);
+
+  if (!isTrackableClickTarget(target)) {
+    return;
+  }
+
+  trackButtonClick(getButtonText(target), getButtonLocation(target), getButtonUrl(target));
+}
+
 function resetEstimateResult() {
   currentEstimate = null;
   renderDefaultEstimateState();
   whatsappButton.setAttribute("href", "#");
   resultActions.hidden = true;
+  hideSuccessMessage();
 }
 
 function getSavedRequests() {
@@ -800,6 +985,16 @@ function appendSaveMessage(message) {
   );
 }
 
+function showSuccessMessage() {
+  successMessage.hidden = false;
+  requestAnimationFrame(() => successMessage.classList.add("is-visible"));
+}
+
+function hideSuccessMessage() {
+  successMessage.classList.remove("is-visible");
+  successMessage.hidden = true;
+}
+
 function renderAdmin() {
   if (adminSection.hidden) {
     return;
@@ -864,7 +1059,9 @@ async function handleSubmit(event) {
         ? t("messages.savedLocal")
         : t("messages.savedTelegram")
     );
+    showSuccessMessage();
   } catch (error) {
+    hideSuccessMessage();
     appendSaveMessage(`${t("messages.telegramFailedPrefix")}${error.message}`);
   }
 }
@@ -889,9 +1086,16 @@ function handleWhatsApp(event) {
 renderOptions();
 updateAdminVisibility();
 setLanguage(currentLanguage);
+initCookieConsent();
 year.textContent = new Date().getFullYear();
 
-calculateButton.addEventListener("click", () => calculateEstimate({ requireForm: true }));
+calculateButton.addEventListener("click", () => {
+  const estimate = calculateEstimate({ requireForm: true });
+
+  if (estimate) {
+    trackGenerateLead();
+  }
+});
 estimateForm.addEventListener("submit", handleSubmit);
 whatsappButton.addEventListener("click", handleWhatsApp);
 refreshAdmin.addEventListener("click", renderAdmin);
@@ -899,6 +1103,9 @@ photoUpload.addEventListener("change", renderPhotoPreview);
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.langOption));
 });
+cookieAccept.addEventListener("click", () => setCookieConsent("accepted"));
+cookieDecline.addEventListener("click", () => setCookieConsent("declined"));
+document.addEventListener("click", handleTrackedClick);
 
 document.addEventListener("change", (event) => {
   if (event.target.matches('input[name="parts"], input[name="damage"]')) {

@@ -8,17 +8,15 @@
       content="CarLabra professional car paint and body repair estimate tool in Espoo."
     />
     <title>CarLabra — Professional Car Paint & Body Repair</title>
-    <!-- Google tag (gtag.js) -->
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DMH9P98ZTZ"></script>
-
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-DMH9P98ZTZ');
-    </script>
+    <meta property="og:title" content="CarLabra – Automaalaus ja korikorjaus Espoossa" />
+    <meta
+      property="og:description"
+      content="Nopea auton maalauksen hinta-arvio verkossa. Lataa kuvat ja saat arvion minuuteissa."
+    />
+    <meta property="og:url" content="https://carlabra-estimate.fi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://carlabra-estimate.fi/public/assets/logoCarlabra.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -208,6 +206,9 @@
                 Calculate estimate
               </button>
             </div>
+            <p class="form-helper" data-i18n="form.helper">
+              We will send the estimate as soon as possible via WhatsApp or email.
+            </p>
             </form>
 
             <aside class="estimate-result" aria-live="polite">
@@ -232,6 +233,9 @@
               >
                 Continue in WhatsApp
               </a>
+            </div>
+            <div id="successMessage" class="success-message" role="status" hidden data-i18n="messages.submitSuccess">
+              Thank you! We have received your request and will contact you soon.
             </div>
             <div class="quick-links">
               <a href="https://carlabra.fi/ru/gallery" target="_blank" rel="noopener noreferrer" data-i18n="result.gallery">View gallery</a>
@@ -378,6 +382,24 @@
         <div class="footer-bottom">© <span id="year"></span> CarLabra Oy. <span data-i18n="footer.bottom">All rights reserved.</span></div>
       </div>
     </footer>
+
+    <div
+      id="cookieConsent"
+      class="cookie-consent"
+      role="dialog"
+      aria-live="polite"
+      aria-label="Cookie consent"
+      data-i18n-aria-label="cookies.aria"
+      hidden
+    >
+      <p data-i18n="cookies.text">
+        We use cookies to improve user experience and analyze traffic.
+      </p>
+      <div class="cookie-actions">
+        <button class="button button-primary" type="button" id="cookieAccept" data-i18n="cookies.accept">Accept</button>
+        <button class="button button-secondary" type="button" id="cookieDecline" data-i18n="cookies.decline">Decline</button>
+      </div>
+    </div>
 
     <script src="./app.js"></script>
   </body>
