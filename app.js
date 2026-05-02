@@ -6,8 +6,8 @@ const SUPPORTED_LANGUAGES = ["en", "fi"];
 const TRANSLATIONS = {
   en: {
     meta: {
-      title: "CarLabra — Professional Car Paint & Body Repair",
-      description: "CarLabra professional car paint and body repair estimate tool in Espoo.",
+      title: "Car painting and auto body repair in Espoo | CarLabra",
+      description: "CarLabra provides online car paint cost estimates and auto body repair in Espoo and Helsinki.",
     },
     language: { aria: "Language" },
     brand: { subtitle: "Paint & Body" },
@@ -16,11 +16,12 @@ const TRANSLATIONS = {
       estimate: "Estimate",
       gallery: "Gallery",
       shop: "Shop",
+      about: "ABOUT",
       contact: "Contact",
     },
     hero: {
       eyebrow: "Espoo auto body workshop",
-      title: "CarLabra — Professional Car Paint & Body Repair",
+      title: "Car painting and auto body repair in Espoo – online price estimate",
       copy:
         "Get an accurate repair estimate in under 60 seconds. Professional auto body repair, paint restoration, and precision color matching in Espoo.",
       cta: "Get your estimate",
@@ -136,12 +137,14 @@ const TRANSLATIONS = {
       },
     },
     about: {
-      eyebrow: "About CarLabra",
-      title: "Focused on quality and customer confidence since 2022",
+      eyebrow: "ABOUT CARLABRA",
+      title: "Car paint cost estimate and auto body repair in Espoo and Helsinki",
       copy1:
-        "CarLabra Oy is an auto body and paint workshop in Espoo, operating since 2022. We specialize in vehicle repair and refinishing, with close attention to detail at every step of the process.",
+        "CarLabra is an auto paint and body repair shop based in Espoo. We provide fast and clear price estimates for car painting, body repairs and paint surface damage.",
       copy2:
-        "Our team and equipment allow us to work across a wide range of vehicles, from motorcycles to commercial fleets. The goal is simple: restore a sharp, confident exterior and deliver a result that feels right when the vehicle leaves the workshop.",
+        "Customers can upload photos of the damage and receive an initial repair estimate online before contacting the workshop. The final price is always confirmed after inspection.",
+      copy3:
+        "Our services include car paint cost estimates, auto body repair, damage repair, color matching and finishing. We serve customers in the Espoo and Helsinki area.",
     },
     admin: {
       eyebrow: "Request dashboard",
@@ -175,8 +178,8 @@ const TRANSLATIONS = {
   },
   fi: {
     meta: {
-      title: "CarLabra — automaalaus ja korikorjaus",
-      description: "CarLabran automaalauksen ja korikorjauksen arviotyökalu Espoossa.",
+      title: "Automaalaus ja korikorjaus Espoossa | CarLabra",
+      description: "CarLabra tarjoaa auton maalauksen hinta-arvion ja korikorjauksen Espoon ja Helsingin alueella.",
     },
     language: { aria: "Kieli" },
     brand: { subtitle: "Maalaus & kori" },
@@ -185,11 +188,12 @@ const TRANSLATIONS = {
       estimate: "Arvio",
       gallery: "Galleria",
       shop: "Kauppa",
+      about: "MEISTÄ",
       contact: "Yhteys",
     },
     hero: {
       eyebrow: "Automaalaamo ja korikorjaamo Espoossa",
-      title: "CarLabra — automaalaus ja korikorjaus",
+      title: "Automaalaus ja korikorjaus Espoossa – hinta-arvio verkossa",
       copy:
         "Pyydä korjausarvio alle minuutissa. Teemme korikorjaukset, maalipinnan korjaukset ja tarkan värinsävytyksen Espoossa.",
       cta: "Pyydä arvio",
@@ -304,12 +308,14 @@ const TRANSLATIONS = {
       },
     },
     about: {
-      eyebrow: "Tietoa CarLabrasta",
-      title: "Laatua ja luottamusta vuodesta 2022",
+      eyebrow: "TIETOA CARLABRASTA",
+      title: "Auton maalauksen hinta ja korjausarvio Espoossa ja Helsingissä",
       copy1:
-        "CarLabra Oy on Espoossa toimiva automaalaamo ja korikorjaamo, joka on palvellut asiakkaita vuodesta 2022. Erikoisalaamme ovat ajoneuvojen korjaukset ja viimeistely tarkalla työotteella.",
+        "CarLabra on Espoossa toimiva automaalaamo ja korikorjaamo. Tarjoamme nopean ja selkeän hinta-arvion auton maalauksesta, korikorjauksesta ja maalipinnan vaurioista.",
       copy2:
-        "Osaamisemme ja laitteistomme sopivat monenlaisiin ajoneuvoihin moottoripyöristä hyötyajoneuvoihin. Tavoitteena on palauttaa siisti ja varma ulkonäkö sekä lopputulos, johon asiakas voi luottaa.",
+        "Voit lähettää kuvat vauriosta ja saada alustavan korjausarvion verkossa ennen yhteydenottoa korjaamolle. Lopullinen hinta vahvistetaan aina tarkastuksen jälkeen.",
+      copy3:
+        "Palveluihimme kuuluvat auton maalauksen hinta-arvio, korikorjaus, vauriokorjaus, värinsävytys ja viimeistely. Palvelemme asiakkaita Espoon ja Helsingin alueella.",
     },
     admin: {
       eyebrow: "Pyyntöjen hallinta",
