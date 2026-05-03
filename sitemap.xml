@@ -5,4 +5,8 @@
     <loc>https://carlabra-estimate.fi/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://carlabra-estimate.fi/auton-maalauksen-hinta</loc>
+    <priority>0.8</priority>
+  </url>
 </urlset>

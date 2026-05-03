@@ -791,6 +791,84 @@ td {
   font-size: 14px;
 }
 
+.seo-page {
+  background: var(--panel);
+}
+
+.seo-hero {
+  padding: clamp(82px, 10vw, 136px) clamp(20px, 6vw, 86px) clamp(60px, 8vw, 96px);
+}
+
+.seo-hero-inner {
+  max-width: 920px;
+}
+
+.seo-hero h1 {
+  max-width: 940px;
+}
+
+.seo-intro {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: clamp(18px, 2vw, 22px);
+}
+
+.seo-content-section {
+  padding: clamp(58px, 8vw, 96px) clamp(20px, 6vw, 86px);
+}
+
+.seo-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.62fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.seo-card {
+  border-top: 4px solid var(--purple);
+  padding: clamp(22px, 4vw, 34px);
+  background: var(--white);
+}
+
+.seo-card p,
+.seo-card li {
+  color: var(--gray);
+  font-size: 17px;
+}
+
+.seo-card ul {
+  display: grid;
+  gap: 12px;
+  padding-left: 20px;
+  margin: 0;
+}
+
+.price-list {
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  margin: 0 0 26px;
+  list-style: none;
+}
+
+.price-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  font-weight: 900;
+}
+
+.price-list span {
+  color: var(--near-black);
+}
+
+.price-list strong {
+  color: var(--purple-dark);
+  white-space: nowrap;
+}
+
 .cookie-consent {
   position: fixed;
   right: clamp(16px, 3vw, 34px);
@@ -850,6 +928,7 @@ td {
   .hero-inner,
   .calculator-shell,
   .about-inner,
+  .seo-content-grid,
   .footer-grid {
     grid-template-columns: 1fr;
   }
